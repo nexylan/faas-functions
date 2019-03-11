@@ -1,0 +1,30 @@
+branches:
+  only:
+    - master
+
+language: go
+
+sudo: false
+
+go:
+  - 1.11.x
+  - tip
+
+matrix:
+  allow_failures:
+    - go: tip
+
+notifications:
+  email: false
+
+before_script:
+  - go get golang.org/x/lint/golint
+
+script:
+  - gofmt -s -l .
+  - go vet ./...
+  - golint -set_exit_status $(go list ./...)
+  - go test -race -coverprofile=coverage.txt -covermode=atomic
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
