@@ -9,17 +9,20 @@ import (
 
 // PasswordSpec is function body reference
 type PasswordSpec struct {
-	Length int
+	Length         int
+	UpperCaseNum   int
+	DigitNum       int
+	SpecialCharNum int
 }
 
 // ResponseCode is code of each response
 type ResponseCode struct {
-	Code     int
+	Code int
 }
 
 // Response is the structure of function response
 type Response struct {
-	Code     ResponseCode
+	ResponseCode
 	Password string
 }
 
@@ -30,6 +33,9 @@ func Handle(req []byte) string {
 	var err error
 
 	passwordSpec.Length = 8
+	passwordSpec.UpperCaseNum = 1
+	passwordSpec.DigitNum = 1
+	passwordSpec.SpecialCharNum = 1
 
 	if len(req) != 0 {
 		err = json.Unmarshal(req, &passwordSpec)
@@ -39,21 +45,46 @@ func Handle(req []byte) string {
 		marshalJSON, _ := json.Marshal(ResponseCode{Code: http.StatusBadRequest})
 		encodedResponse = marshalJSON
 	} else {
-		marshalJSON, _ := json.Marshal(Response{Code: ResponseCode{Code:http.StatusOK}, Password: generate(passwordSpec.Length)})
+		marshalJSON, _ := json.Marshal(Response{ResponseCode{Code: http.StatusOK}, generate(passwordSpec)})
 		encodedResponse = marshalJSON
 	}
 
 	return string(encodedResponse)
 }
 
-func generate(length int) string {
+func generate(passwordSpec PasswordSpec) string {
 	rand.Seed(time.Now().UTC().UnixNano())
 
-	allowedChars := []rune("ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvxyz0123456789/-+!\\:;[]{}_$#@")
-	passwordArray := make([]rune, length)
+	upperCaseLetters := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	digits := []rune("0123456789")
+	specialChars := []rune("/-+!\\:;[]{}_$#@")
+	allChars := append(
+		append(upperCaseLetters, []rune("abcdefghijklmnopqrstuvwxyz")...),
+		append(digits, specialChars...)...,
+	)
+	upperCaseUsed, digitUsed, specialChar := 0, 0, 0
+	passwordLength := passwordSpec.Length
+	minimalRequiredCharsLength := passwordSpec.UpperCaseNum + passwordSpec.DigitNum + passwordSpec.SpecialCharNum
+
+	if passwordLength < minimalRequiredCharsLength {
+		passwordLength = minimalRequiredCharsLength
+	}
+
+	passwordArray := make([]rune, passwordLength)
 
 	for index := range passwordArray {
-		passwordArray[index] = allowedChars[rand.Intn(len(allowedChars))]
+		if passwordSpec.UpperCaseNum != upperCaseUsed {
+			passwordArray[index] = upperCaseLetters[rand.Intn(len(upperCaseLetters))]
+			upperCaseUsed++
+		} else if passwordSpec.DigitNum != digitUsed {
+			passwordArray[index] = digits[rand.Intn(len(digits))]
+			digitUsed++
+		} else if passwordSpec.SpecialCharNum != specialChar {
+			passwordArray[index] = specialChars[rand.Intn(len(specialChars))]
+			specialChar++
+		} else {
+			passwordArray[index] = allChars[rand.Intn(len(allChars))]
+		}
 	}
 
 	return string(passwordArray)

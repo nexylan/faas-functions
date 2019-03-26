@@ -12,11 +12,18 @@ Simple Golang password generator function using Openfaas.
 
 ```json
 {
-  "Length": 15
+  "Length": 15,
+  "UpperCaseNum": 5,
+  "DigitNum": 2,
+  "SpecialCharNum": 2
 }
 ```
 
-> Default password length is 8
+> Default values:
+> * password: 8
+> * uppercase: 1
+> * digit: 1
+> * special char: 1
 
 ### Response
 

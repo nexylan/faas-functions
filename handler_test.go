@@ -2,6 +2,7 @@ package function
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 func TestPasswordGeneration(t *testing.T) {
 	response := decodeResponse(Handle([]byte{}))
 
-	validateResponseCode(t, http.StatusOK, response.Code.Code)
+	validateResponseCode(t, http.StatusOK, response.Code)
 	validatePassword(t, response.Password, 8)
 }
 
@@ -22,8 +23,24 @@ func TestPasswordGenerationWithCustomLength(t *testing.T) {
 	stringifyLength := strconv.Itoa(length)
 	response := decodeResponse(Handle([]byte("{\"Length\":" + stringifyLength + "}")))
 
-	validateResponseCode(t, http.StatusOK, response.Code.Code)
+	validateResponseCode(t, http.StatusOK, response.Code)
 	validatePassword(t, response.Password, length)
+}
+
+func TestPasswordGenerationWithCustomSpecification(t *testing.T) {
+	length, upperCaseNum, digitNum, specialCharNum := 5, 3, 2, 3
+
+	response := decodeResponse(Handle([]byte(
+		fmt.Sprintf("{\"Length\": %s, \"UpperCaseNum\": %s,\"DigitNum\": %s,\"SpecialCharNum\": %s}",
+			strconv.Itoa(length),
+			strconv.Itoa(upperCaseNum),
+			strconv.Itoa(digitNum),
+			strconv.Itoa(specialCharNum),
+		),
+	)))
+
+	validateResponseCode(t, http.StatusOK, response.Code)
+	validatePassword(t, response.Password, upperCaseNum+digitNum+specialCharNum)
 }
 
 func TestInvalidJSON(t *testing.T) {
