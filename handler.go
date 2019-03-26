@@ -14,12 +14,12 @@ type PasswordSpec struct {
 
 // ResponseCode is code of each response
 type ResponseCode struct {
-	Code     int
+	Code int
 }
 
 // Response is the structure of function response
 type Response struct {
-	Code     ResponseCode
+	ResponseCode
 	Password string
 }
 
@@ -39,7 +39,7 @@ func Handle(req []byte) string {
 		marshalJSON, _ := json.Marshal(ResponseCode{Code: http.StatusBadRequest})
 		encodedResponse = marshalJSON
 	} else {
-		marshalJSON, _ := json.Marshal(Response{Code: ResponseCode{Code:http.StatusOK}, Password: generate(passwordSpec.Length)})
+		marshalJSON, _ := json.Marshal(Response{ResponseCode{Code: http.StatusOK}, generate(passwordSpec.Length)})
 		encodedResponse = marshalJSON
 	}
 

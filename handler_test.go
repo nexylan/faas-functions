@@ -12,7 +12,7 @@ import (
 func TestPasswordGeneration(t *testing.T) {
 	response := decodeResponse(Handle([]byte{}))
 
-	validateResponseCode(t, http.StatusOK, response.Code.Code)
+	validateResponseCode(t, http.StatusOK, response.Code)
 	validatePassword(t, response.Password, 8)
 }
 
@@ -22,7 +22,7 @@ func TestPasswordGenerationWithCustomLength(t *testing.T) {
 	stringifyLength := strconv.Itoa(length)
 	response := decodeResponse(Handle([]byte("{\"Length\":" + stringifyLength + "}")))
 
-	validateResponseCode(t, http.StatusOK, response.Code.Code)
+	validateResponseCode(t, http.StatusOK, response.Code)
 	validatePassword(t, response.Password, length)
 }
 
