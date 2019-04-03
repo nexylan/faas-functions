@@ -9,21 +9,21 @@ import (
 
 // PasswordSpec is function body reference
 type PasswordSpec struct {
-	Length         int
-	UpperCaseNum   int
-	DigitNum       int
-	SpecialCharNum int
+	Length         int `json:"length,omitempty"`
+	UpperCaseNum   int `json:"upper_case_num,omitempty"`
+	DigitNum       int `json:"digit_num,omitempty"`
+	SpecialCharNum int `json:"special_char_num,omitempty"`
 }
 
 // ResponseCode is code of each response
 type ResponseCode struct {
-	Code int
+	Code int `json:"code"`
 }
 
 // Response is the structure of function response
 type Response struct {
 	ResponseCode
-	Password string
+	Password string `json:"password"`
 }
 
 // Handle is the function main method triggered each time the function is called

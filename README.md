@@ -12,10 +12,10 @@ Simple Golang password generator function using Openfaas.
 
 ```json
 {
-  "Length": 15,
-  "UpperCaseNum": 5,
-  "DigitNum": 2,
-  "SpecialCharNum": 2
+  "length": 15,
+  "upper_case_num": 5,
+  "digit_num": 2,
+  "special_char_num": 2
 }
 ```
 
@@ -29,7 +29,7 @@ Simple Golang password generator function using Openfaas.
 
 ```json
 {
-  "Code": 200,
-  "Password": "9rj8ejRKYY+Cit9"
+  "code": 200,
+  "password": "9rj8ejRKYY+Cit9"
 }
 ```
