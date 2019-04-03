@@ -21,7 +21,7 @@ func TestPasswordGeneration(t *testing.T) {
 func TestPasswordGenerationWithCustomLength(t *testing.T) {
 	length := 15
 	stringifyLength := strconv.Itoa(length)
-	response := decodeResponse(Handle([]byte("{\"Length\":" + stringifyLength + "}")))
+	response := decodeResponse(Handle([]byte("{\"length\":" + stringifyLength + "}")))
 
 	validateResponseCode(t, http.StatusOK, response.Code)
 	validatePassword(t, response.Password, length)
@@ -31,7 +31,7 @@ func TestPasswordGenerationWithCustomSpecification(t *testing.T) {
 	length, upperCaseNum, digitNum, specialCharNum := 5, 3, 2, 3
 
 	response := decodeResponse(Handle([]byte(
-		fmt.Sprintf("{\"Length\": %s, \"UpperCaseNum\": %s,\"DigitNum\": %s,\"SpecialCharNum\": %s}",
+		fmt.Sprintf("{\"length\": %s, \"upper_case_num\": %s,\"digit_num\": %s,\"special_char_num\": %s}",
 			strconv.Itoa(length),
 			strconv.Itoa(upperCaseNum),
 			strconv.Itoa(digitNum),
@@ -44,7 +44,7 @@ func TestPasswordGenerationWithCustomSpecification(t *testing.T) {
 }
 
 func TestInvalidJSON(t *testing.T) {
-	response := decodeResponseCode(Handle([]byte("{\"Length\":\"fail\"}")))
+	response := decodeResponseCode(Handle([]byte("{\"length\":\"fail\"}")))
 
 	validateResponseCode(t, http.StatusBadRequest, response.Code)
 }
