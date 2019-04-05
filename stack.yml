@@ -4,5 +4,5 @@ provider:
 functions:
   password-generator:
     lang: go
-    handler: .
+    handler: ./password-generator
     image: nexylan/password-generator:latest
