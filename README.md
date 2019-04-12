@@ -9,3 +9,4 @@
 ## Functions
 
 * [Password generator](password-generator)
+* [Domain IP](domain-ip)
